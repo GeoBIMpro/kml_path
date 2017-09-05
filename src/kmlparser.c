@@ -39,14 +39,13 @@ int kmlGetLineData( xmlNode *node, blh_t **lines, int nline )
 					npoints = 0;
 					points = (char*)xmlNodeGetContent( cur_node );
 					saveptr = NULL;
-					for( points = strtok_r( points, " \t", &saveptr );
+					for( points = strtok_r( points, " \t\r\n", &saveptr );
 						 points;
-						 points = strtok_r( NULL, " \t", &saveptr ) )
+						 points = strtok_r( NULL, " \t\r\n", &saveptr ) )
 					{
 						double dummy;
-						if( sscanf( points, "%lf,%lf,%lf", &dummy, 
-														&dummy, 
-														&dummy ) == 3 )
+						if( sscanf( points, "%lf,%lf", &dummy, 
+														&dummy) == 2 )
 						{
 							npoints ++;
 						}
@@ -56,14 +55,15 @@ int kmlGetLineData( xmlNode *node, blh_t **lines, int nline )
 					npoints = 0;
 					points = (char*)xmlNodeGetContent( cur_node );
 					saveptr = NULL;
-					for( points = strtok_r( points, " \t", &saveptr );
+					for( points = strtok_r( points, " \t\r\n", &saveptr );
 						 points;
-						 points = strtok_r( NULL, " \t", &saveptr ) )
+						 points = strtok_r( NULL, " \t\r\n", &saveptr ) )
 					{
-						if( sscanf( points, "%lf,%lf,%lf", &lines[ nline ][ npoints ].lon, 
-														&lines[ nline ][ npoints ].lat, 
-														&lines[ nline ][ npoints ].height ) == 3 )
+						int h;
+						if( sscanf( points, "%lf,%lf", &lines[ nline ][ npoints ].lon, 
+														&lines[ nline ][ npoints ].lat) == 2 )
 						{
+							lines[ nline ][ npoints ].height = 0;
 							npoints ++;
 						}
 					}
